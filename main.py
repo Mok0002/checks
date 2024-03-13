@@ -1,10 +1,20 @@
+from flask import Flask
+from threading import Thread
 import platform
 import time
+
+app = Flask('')
+
+
+
+@app.route('/')
+def home():
+    print_computer_specs()
 
 def get_computer_specs():
     specs = {}
 
-    # Retrieving system information
+        # Retrieving system information
     specs['System'] = platform.system()
     specs['Node'] = platform.node()
     specs['Release'] = platform.release()
@@ -12,7 +22,7 @@ def get_computer_specs():
     specs['Machine'] = platform.machine()
     specs['Processor'] = platform.processor()
 
-    # Retrieving additional hardware information
+        # Retrieving additional hardware information
     try:
         import psutil
         specs['CPU Cores'] = psutil.cpu_count(logical=False)
@@ -34,5 +44,9 @@ def print_computer_specs():
         print("\n")
         time.sleep(5)  # Adjust interval as needed
 
-if __name__ == "__main__":
-    print_computer_specs()
+def run():
+  app.run(host='0.0.0.0',port=8080)
+
+def keep_alive():  
+    t = Thread(target=run)
+    t.start()
